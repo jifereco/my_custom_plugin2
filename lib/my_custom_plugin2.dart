@@ -1,4 +1,14 @@
-import 'package:flutter/services.dart';
+
+import 'my_nrf_plugin23_platform_interface.dart';
+
+class MyNrfPlugin23 {
+  Future<String?> getPlatformVersion() {
+    return MyNrfPlugin23Platform.instance.getPlatformVersion();
+  }
+}
+
+
+/*import 'package:flutter/services.dart';
 import 'my_custom_plugin2_platform_interface.dart';
 
 class MyCustomPlugin2 {
@@ -14,4 +24,4 @@ class MyCustomPlugin2 {
         await _channel.invokeMethod<int>('getBatteryLevel') ?? -1;
     return level;
   }
-}
+}*/
