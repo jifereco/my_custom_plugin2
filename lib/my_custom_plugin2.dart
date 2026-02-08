@@ -1,9 +1,9 @@
 
-import 'my_nrf_plugin23_platform_interface.dart';
+import 'my_custom_plugin2_platform_interface.dart';
 
-class MyNrfPlugin23 {
+class MyCustomPlugin2 {
   Future<String?> getPlatformVersion() {
-    return MyNrfPlugin23Platform.instance.getPlatformVersion();
+    return MyCustomPlugin2Platform.instance.getPlatformVersion();
   }
 }
 
