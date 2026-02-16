@@ -15,21 +15,32 @@ class MyCustomPlugin2Plugin :
     // This local reference serves to register the plugin with the Flutter Engine and unregister it
     // when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
+    private lateinit var bleScanner: BleScanner
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "my_custom_plugin2")
         channel.setMethodCallHandler(this)
+        bleScanner = BleScanner(channel)
     }
 
     override fun onMethodCall(
         call: MethodCall,
         result: Result
     ) {
-        if (call.method == "getPlatformVersion") {
-            result.success("Android ${android.os.Build.VERSION.RELEASE}")
-        } else {
-            result.notImplemented()
-        }
+
+        
+if (call.method == "getPlatformVersion") {
+
+    result.success("Android ${android.os.Build.VERSION.RELEASE}")
+
+} else if (call.method == "scanDevices") {
+
+    bleScanner.scanForDevices(result)
+
+} else {
+
+    result.notImplemented()
+}
 
 
 
