@@ -32,10 +32,7 @@ class BleScanner(private val channel: MethodChannel) {
                 val address = device.address
                 val rssi = resultScan.rssi
 
-                // 🔥 Forma correcta estilo Nordic
-                val bonded = device.bondState == BluetoothDevice.BOND_BONDED
 
-                Log.d("BLE", "Device: $address bondState=${device.bondState}")
 
                 devices[address] = mapOf(
                     "name" to name,
