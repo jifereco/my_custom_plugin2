@@ -14,4 +14,12 @@ class MethodChannelMyCustomPlugin2 extends MyCustomPlugin2Platform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+Future<List<dynamic>> scanDevices() async {
+  final result = await methodChannel.invokeMethod('scanDevices');
+  return result;
+}
+
+
 }

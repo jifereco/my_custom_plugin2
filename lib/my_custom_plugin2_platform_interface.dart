@@ -26,4 +26,9 @@ abstract class MyCustomPlugin2Platform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<List<dynamic>> scanDevices() {
+  throw UnimplementedError('scanDevices() has not been implemented.');
+}
+
 }

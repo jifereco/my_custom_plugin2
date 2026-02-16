@@ -5,6 +5,11 @@ class MyCustomPlugin2 {
   Future<String?> getPlatformVersion() {
     return MyCustomPlugin2Platform.instance.getPlatformVersion();
   }
+
+    Future<List<dynamic>> scanDevices() {
+    return MyCustomPlugin2Platform.instance.scanDevices();
+  }
+  
 }
 
 
