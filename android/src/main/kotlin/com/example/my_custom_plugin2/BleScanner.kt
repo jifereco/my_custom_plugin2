@@ -1,6 +1,7 @@
 package com.example.my_custom_plugin2
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.*
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,9 @@ class BleScanner(private val channel: MethodChannel) {
     fun scanForDevices(result: MethodChannel.Result, duration: Long = 5000L) {
 
         val adapter = BluetoothAdapter.getDefaultAdapter()
+
+
+
         bluetoothLeScanner = adapter.bluetoothLeScanner
 
         devices.clear()
@@ -23,14 +27,15 @@ class BleScanner(private val channel: MethodChannel) {
 
             override fun onScanResult(callbackType: Int, resultScan: ScanResult) {
 
-                val device = resultScan.device
+                val device: BluetoothDevice = resultScan.device
                 val name = device.name ?: "Unknown"
                 val address = device.address
                 val rssi = resultScan.rssi
 
-val bonded = device.bondState == android.bluetooth.BluetoothDevice.BOND_BONDED
+                // 🔥 Forma correcta estilo Nordic
+                val bonded = device.bondState == BluetoothDevice.BOND_BONDED
 
-
+                Log.d("BLE", "Device: $address bondState=${device.bondState}")
 
                 devices[address] = mapOf(
                     "name" to name,
@@ -38,6 +43,10 @@ val bonded = device.bondState == android.bluetooth.BluetoothDevice.BOND_BONDED
                     "rssi" to rssi,
                     "bonded" to bonded
                 )
+            }
+
+            override fun onScanFailed(errorCode: Int) {
+                result.error("SCAN_FAILED", "Error code: $errorCode", null)
             }
         }
 
