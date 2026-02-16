@@ -16,8 +16,13 @@ class BleScanner(private val channel: MethodChannel) {
 
         val adapter = BluetoothAdapter.getDefaultAdapter()
         bluetoothLeScanner = adapter.bluetoothLeScanner
+devices.clear()
 
-        devices.clear()
+    // 🔥 Obtener bonded una sola vez
+    val bondedDevices = adapter.bondedDevices
+    val bondedAddresses = bondedDevices.map { it.address }.toSet()
+
+        
 
         scanCallback = object : ScanCallback() {
 
@@ -27,11 +32,8 @@ class BleScanner(private val channel: MethodChannel) {
                 val name = device.name ?: "Unknown"
                 val address = device.address
                 val rssi = resultScan.rssi
+val bonded = bondedAddresses.contains(address)
 
-val adapter = BluetoothAdapter.getDefaultAdapter()
-val bondedDevices = adapter.bondedDevices
-
-val bonded = bondedDevices.any { it.address == device.address }
 
 
                 devices[address] = mapOf(
