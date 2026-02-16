@@ -28,10 +28,16 @@ class BleScanner(private val channel: MethodChannel) {
                 val address = device.address
                 val rssi = resultScan.rssi
 
+                val bonded = when (device.bondState) {
+                 android.bluetooth.BluetoothDevice.BOND_BONDED -> true
+                  else -> false
+                }
+
                 devices[address] = mapOf(
                     "name" to name,
                     "address" to address,
-                    "rssi" to rssi
+                    "rssi" to rssi,
+                    "bonded" to bonded
                 )
             }
         }
