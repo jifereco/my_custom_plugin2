@@ -17,7 +17,7 @@ class MyCustomPlugin2Plugin :
     private lateinit var channel: MethodChannel
     private var activity: Activity? = null
     private var bleScanner: BleScanner? = null
-    private var bondManager: BondManager? = null
+    private lateinit var bondManager: BondManager
 
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
