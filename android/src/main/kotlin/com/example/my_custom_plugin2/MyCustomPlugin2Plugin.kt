@@ -21,6 +21,8 @@ class MyCustomPlugin2Plugin :
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, "my_custom_plugin2")
         channel.setMethodCallHandler(this)
+
+       bleScanner = BleScanner(binding.applicationContext, channel)
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
