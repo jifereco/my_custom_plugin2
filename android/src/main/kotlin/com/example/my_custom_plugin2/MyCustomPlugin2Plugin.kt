@@ -17,12 +17,15 @@ class MyCustomPlugin2Plugin :
     private lateinit var channel: MethodChannel
     private var activity: Activity? = null
     private var bleScanner: BleScanner? = null
+    private var bondManager: BondManager? = null
+
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, "my_custom_plugin2")
         channel.setMethodCallHandler(this)
 
        bleScanner = BleScanner(binding.applicationContext, channel)
+       bondManager = BondManager()
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
