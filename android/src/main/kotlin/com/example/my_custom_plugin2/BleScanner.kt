@@ -30,7 +30,7 @@ class BleScanner(
             return
         }
 
-        // 🔥 Verificación REAL de permiso Android 12+
+        // 🔥 Verificación permiso Android 12+
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.BLUETOOTH_SCAN
@@ -47,15 +47,10 @@ class BleScanner(
             return
         }
 
-
-    val bondedAddresses = adapter.bondedDevices
-        .map { it.address }
-        .toSet()
-
-    bluetoothLeScanner = adapter.bluetoothLeScanner
-
-
-
+        // 🔥 Lista bonded tipo Nordic
+        val bondedAddresses = adapter.bondedDevices
+            .map { it.address }
+            .toSet()
 
         devices.clear()
 
@@ -68,9 +63,9 @@ class BleScanner(
                 val address = device.address
                 val rssi = resultScan.rssi
 
-            val bonded = bondedAddresses.contains(address)
+                val bonded = bondedAddresses.contains(address)
 
-            Log.d("BLE", "Device: $address bonded=$bonded")
+                Log.d("BLE", "Device: $address bonded=$bonded")
 
                 devices[address] = mapOf(
                     "name" to name,
@@ -93,3 +88,7 @@ class BleScanner(
 
             val list = devices.values.toList()
             result.success(list)
+
+        }, duration)
+    }
+}
