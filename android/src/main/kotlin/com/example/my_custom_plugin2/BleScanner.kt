@@ -47,6 +47,16 @@ class BleScanner(
             return
         }
 
+
+    val bondedAddresses = adapter.bondedDevices
+        .map { it.address }
+        .toSet()
+
+    bluetoothLeScanner = adapter.bluetoothLeScanner
+
+
+
+
         devices.clear()
 
         scanCallback = object : ScanCallback() {
@@ -58,9 +68,9 @@ class BleScanner(
                 val address = device.address
                 val rssi = resultScan.rssi
 
-                val bonded = device.bondState == BluetoothDevice.BOND_BONDED
+            val bonded = bondedAddresses.contains(address)
 
-                Log.d("BLE", "Device: $address bondState=${device.bondState}")
+            Log.d("BLE", "Device: $address bonded=$bonded")
 
                 devices[address] = mapOf(
                     "name" to name,
