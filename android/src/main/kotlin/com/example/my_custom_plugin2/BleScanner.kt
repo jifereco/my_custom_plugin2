@@ -1,14 +1,21 @@
 package com.example.my_custom_plugin2
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.*
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.core.content.ContextCompat
 import io.flutter.plugin.common.MethodChannel
 
-class BleScanner(private val channel: MethodChannel) {
+class BleScanner(
+    private val context: Context,
+    private val channel: MethodChannel
+) {
 
     private val devices = mutableMapOf<String, Map<String, Any>>()
     private var bluetoothLeScanner: BluetoothLeScanner? = null
@@ -18,6 +25,20 @@ class BleScanner(private val channel: MethodChannel) {
 
         val adapter = BluetoothAdapter.getDefaultAdapter()
 
+        if (adapter == null || !adapter.isEnabled) {
+            result.error("BLUETOOTH_OFF", "Bluetooth is disabled", null)
+            return
+        }
+
+        // 🔥 Verificación REAL de permiso Android 12+
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            result.error("NO_PERMISSION", "BLUETOOTH_SCAN not granted", null)
+            return
+        }
 
         bluetoothLeScanner = adapter.bluetoothLeScanner
 
@@ -62,7 +83,3 @@ class BleScanner(private val channel: MethodChannel) {
 
             val list = devices.values.toList()
             result.success(list)
-
-        }, duration)
-    }
-}
