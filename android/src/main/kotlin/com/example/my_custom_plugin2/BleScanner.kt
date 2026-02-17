@@ -21,7 +21,31 @@ class BleScanner(
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanCallback: ScanCallback? = null
 
-    fun scanForDevices(result: MethodChannel.Result, duration: Long = 5000L) {
+fun getBondedDevices(result: MethodChannel.Result) {
+
+    val adapter = BluetoothAdapter.getDefaultAdapter()
+
+    if (adapter == null) {
+        result.error("NO_ADAPTER", "Bluetooth not supported", null)
+        return
+    }
+
+    val bondedList = adapter.bondedDevices.map { device ->
+        mapOf(
+            "name" to (device.name ?: "Unknown"),
+            "address" to device.address,
+            "bondState" to device.bondState
+        )
+    }
+
+    result.success(bondedList)
+}
+
+
+
+
+
+    /*fun scanForDevices(result: MethodChannel.Result, duration: Long = 5000L) {
 
         val adapter = BluetoothAdapter.getDefaultAdapter()
 
@@ -90,5 +114,5 @@ class BleScanner(
             result.success(list)
 
         }, duration)
-    }
+    }*/
 }
