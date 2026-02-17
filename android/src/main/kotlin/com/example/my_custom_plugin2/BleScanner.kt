@@ -21,74 +21,76 @@ class BleScanner(
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanCallback: ScanCallback? = null
 
+
     fun scanForDevices(result: MethodChannel.Result, duration: Long = 5000L) {
 
-        val adapter = BluetoothAdapter.getDefaultAdapter()
+    val adapter = BluetoothAdapter.getDefaultAdapter()
 
-        if (adapter == null || !adapter.isEnabled) {
-            result.error("BLUETOOTH_OFF", "Bluetooth is disabled", null)
-            return
-        }
-
-        // 🔥 Verificación permiso Android 12+
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            result.error("NO_PERMISSION", "BLUETOOTH_SCAN not granted", null)
-            return
-        }
-
-        bluetoothLeScanner = adapter.bluetoothLeScanner
-
-        if (bluetoothLeScanner == null) {
-            result.error("SCANNER_NULL", "Scanner is null", null)
-            return
-        }
-
-        // 🔥 Lista bonded tipo Nordic
-        val bondedAddresses = adapter.bondedDevices
-            .map { it.address }
-            .toSet()
-
-        devices.clear()
-
-        scanCallback = object : ScanCallback() {
-
-            override fun onScanResult(callbackType: Int, resultScan: ScanResult) {
-
-                val device: BluetoothDevice = resultScan.device
-                val name = device.name ?: "Unknown"
-                val address = device.address
-                val rssi = resultScan.rssi
-
-                val bonded = bondedAddresses.contains(address)
-
-                Log.d("BLE", "Device: $address bonded=$bonded")
-
-                devices[address] = mapOf(
-                    "name" to name,
-                    "address" to address,
-                    "rssi" to rssi,
-                    "bonded" to bonded
-                )
-            }
-
-            override fun onScanFailed(errorCode: Int) {
-                result.error("SCAN_FAILED", "Error code: $errorCode", null)
-            }
-        }
-
-        bluetoothLeScanner?.startScan(scanCallback)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-
-            bluetoothLeScanner?.stopScan(scanCallback)
-
-            val list = devices.values.toList()
-            result.success(list)
-
-        }, duration)
+    if (adapter == null) {
+        result.error("NO_ADAPTER", "Bluetooth not supported", null)
+        return
     }
+
+    if (!adapter.isEnabled) {
+        result.error("BLUETOOTH_OFF", "Bluetooth is disabled", null)
+        return
+    }
+
+    if (ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.BLUETOOTH_SCAN
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        result.error("NO_PERMISSION", "BLUETOOTH_SCAN not granted", null)
+        return
+    }
+
+    bluetoothLeScanner = adapter.bluetoothLeScanner
+
+    if (bluetoothLeScanner == null) {
+        result.error("SCANNER_NULL", "Scanner is null", null)
+        return
+    }
+
+    devices.clear()
+
+    // 🔥 Obtener bonded reales del sistema
+    val bondedMap = adapter.bondedDevices.associateBy { it.address }
+
+    scanCallback = object : ScanCallback() {
+
+        override fun onScanResult(callbackType: Int, resultScan: ScanResult) {
+
+            val device = resultScan.device
+            val address = device.address
+            val name = device.name ?: "Unknown"
+            val rssi = resultScan.rssi
+
+            val systemDevice = bondedMap[address]
+            val bondState = systemDevice?.bondState ?: BluetoothDevice.BOND_NONE
+
+            devices[address] = mapOf(
+                "name" to name,
+                "address" to address,
+                "rssi" to rssi,
+                "bondState" to bondState,
+                "bonded" to (bondState == BluetoothDevice.BOND_BONDED)
+            )
+        }
+
+        override fun onScanFailed(errorCode: Int) {
+            result.error("SCAN_FAILED", "Error code: $errorCode", null)
+        }
+    }
+
+    bluetoothLeScanner?.startScan(scanCallback)
+
+    Handler(Looper.getMainLooper()).postDelayed({
+
+        bluetoothLeScanner?.stopScan(scanCallback)
+
+        result.success(devices.values.toList())
+
+    }, duration)
+}
 }
