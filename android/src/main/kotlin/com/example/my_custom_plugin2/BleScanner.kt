@@ -1,10 +1,11 @@
 package com.example.my_custom_plugin2
 
 import android.bluetooth.BluetoothAdapter
-
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.*
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import io.flutter.plugin.common.MethodChannel
 
 class BleScanner(private val channel: MethodChannel) {
@@ -18,8 +19,12 @@ class BleScanner(private val channel: MethodChannel) {
         val adapter = BluetoothAdapter.getDefaultAdapter()
 
 
-
         bluetoothLeScanner = adapter.bluetoothLeScanner
+
+        if (bluetoothLeScanner == null) {
+            result.error("SCANNER_NULL", "Scanner is null", null)
+            return
+        }
 
         devices.clear()
 
@@ -32,10 +37,9 @@ class BleScanner(private val channel: MethodChannel) {
                 val address = device.address
                 val rssi = resultScan.rssi
 
-val bonded = when (device.bondState) {
-    android.bluetooth.BluetoothDevice.BOND_BONDED -> true
-    else -> false
-}
+                val bonded = device.bondState == BluetoothDevice.BOND_BONDED
+
+                Log.d("BLE", "Device: $address bondState=${device.bondState}")
 
                 devices[address] = mapOf(
                     "name" to name,
@@ -45,7 +49,8 @@ val bonded = when (device.bondState) {
                 )
             }
 
-
+            override fun onScanFailed(errorCode: Int) {
+                result.error("SCAN_FAILED", "Error code: $errorCode", null)
             }
         }
 
