@@ -1,6 +1,6 @@
 
 import 'my_custom_plugin2_platform_interface.dart';
-+
+
 
 class MyCustomPlugin2 {
   Future<String?> getPlatformVersion() {
@@ -18,6 +18,17 @@ class MyCustomPlugin2 {
 Stream<Map<dynamic, dynamic>> get bondStream {
   return MyCustomPlugin2Platform.instance.bondStream;
 }
+
+Future<bool> connectDevice(String address,
+    {bool autoConnect = false}) {
+  return MyCustomPlugin2Platform.instance
+      .connectDevice(address, autoConnect);
+}
+
+Future<bool> disconnectDevice() {
+  return MyCustomPlugin2Platform.instance.disconnectDevice();
+}
+
   
 
 }

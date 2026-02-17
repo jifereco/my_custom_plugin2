@@ -30,6 +30,8 @@ class MyCustomPlugin2Plugin :
     private var bondReceiver: BroadcastReceiver? = null
     private var bondEventSink: EventChannel.EventSink? = null
     private lateinit var context: Context
+    private lateinit var connectionManager: ConnectionManager
+
 
 
 
@@ -60,10 +62,18 @@ bondChannel.setStreamHandler(object : EventChannel.StreamHandler {
     override fun onCancel(arguments: Any?) {
         bondReceiver?.let {
             context.unregisterReceiver(it)
+    //try {
+      //  context.unregisterReceiver(it)
+    //} catch (e: IllegalArgumentException) {
+      //  Log.d("BLE_DEBUG", "Receiver already unregistered")
+    //}
         }
         bondEventSink = null
     }
 })
+
+connectionManager = ConnectionManager(context)
+
 
 
 
@@ -98,12 +108,30 @@ bondChannel.setStreamHandler(object : EventChannel.StreamHandler {
 
             }
 
+"connectDevice" -> {
+    val address = call.argument<String>("address")
+    val autoConnect = call.argument<Boolean>("autoConnect") ?: false
+
+    if (address != null) {
+        connectionManager.connect(address, autoConnect, result)
+    } else {
+        result.error("NO_ADDRESS", "Address is null", null)
+    }
+}
+
+"disconnectDevice" -> {
+    connectionManager.disconnect()
+    result.success(true)
+}
+
+
             else -> result.notImplemented()
         }
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
+  // connectionManager.disconnect() cerra conexion si existe
     }
 
     // 🔥 ActivityAware implementation

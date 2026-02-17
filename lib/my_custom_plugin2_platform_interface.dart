@@ -39,5 +39,13 @@ Stream<Map<dynamic, dynamic>> get bondStream {
   throw UnimplementedError('bondStream has not been implemented.');
 }
 
+Future<bool> connectDevice(String address, bool autoConnect) {
+  throw UnimplementedError('connectDevice() has not been implemented.');
+}
+
+Future<bool> disconnectDevice() {
+  throw UnimplementedError('disconnectDevice() has not been implemented.');
+}
+
 
 }

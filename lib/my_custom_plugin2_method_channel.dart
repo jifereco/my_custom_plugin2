@@ -45,4 +45,24 @@ Stream<Map<dynamic, dynamic>> get bondStream {
 }
 
 
+  @override
+  Future<bool> connectDevice(String address, bool autoConnect) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'connectDevice',
+      {
+        'address': address,
+        'autoConnect': autoConnect,
+      },
+    );
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> disconnectDevice() async {
+    final result =
+        await methodChannel.invokeMethod<bool>('disconnectDevice');
+    return result ?? false;
+  }
+
+
 }
