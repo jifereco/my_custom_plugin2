@@ -11,8 +11,7 @@ class MyCustomPlugin2 {
   }
 
   Future<List<dynamic>> getBondedDevices() async {
-    final result = await _channel.invokeMethod('getBondedDevices');
-    return result;
+  return MyCustomPlugin2Platform.instance.getBondedDevices();
   }
   
 }
