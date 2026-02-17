@@ -44,10 +44,10 @@ class MyCustomPlugin2Plugin :
                 }
 
                 bleScanner?.scanForDevices(result)
+              }
 
             "getBondedDevices" -> {
                 bondManager.getBondedDevices(result)
-            }
 
             }
 
