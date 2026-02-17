@@ -44,6 +44,11 @@ class MyCustomPlugin2Plugin :
                 }
 
                 bleScanner?.scanForDevices(result)
+
+ if (call.method == "getBondedDevices") {
+    bleScanner.getBondedDevices(result)
+}
+
             }
 
             else -> result.notImplemented()
