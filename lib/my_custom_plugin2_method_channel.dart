@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 
 import 'my_custom_plugin2_platform_interface.dart';
 
+static const EventChannel _bondChannel =
+    EventChannel('my_custom_plugin2/bond_stream');
+
+
 /// An implementation of [MyCustomPlugin2Platform] that uses method channels.
 class MethodChannelMyCustomPlugin2 extends MyCustomPlugin2Platform {
   /// The method channel used to interact with the native platform.
@@ -25,6 +29,14 @@ Future<List<dynamic>> scanDevices() async {
 Future<List<dynamic>> getBondedDevices() async {
   final result = await methodChannel.invokeMethod('getBondedDevices');
   return result;
+}
+
+
+@override
+Stream<Map<dynamic, dynamic>> get bondStream {
+  return _bondChannel
+      .receiveBroadcastStream()
+      .map((event) => Map<dynamic, dynamic>.from(event));
 }
 
 

@@ -35,4 +35,9 @@ abstract class MyCustomPlugin2Platform extends PlatformInterface {
     throw UnimplementedError('getBondedDevices() has not been implemented.');
   }
 
+Stream<Map<dynamic, dynamic>> get bondStream {
+  throw UnimplementedError('bondStream has not been implemented.');
+}
+
+
 }

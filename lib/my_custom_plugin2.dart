@@ -13,7 +13,12 @@ class MyCustomPlugin2 {
   Future<List<dynamic>> getBondedDevices() {
   return MyCustomPlugin2Platform.instance.getBondedDevices();
   }
+
+Stream<Map<dynamic, dynamic>> get bondStream {
+  return MyCustomPlugin2Platform.instance.bondStream;
+}
   
+
 }
 
 
