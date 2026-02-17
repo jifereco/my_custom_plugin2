@@ -45,8 +45,7 @@ val bonded = when (device.bondState) {
                 )
             }
 
-            override fun onScanFailed(errorCode: Int) {
-                result.error("SCAN_FAILED", "Error code: $errorCode", null)
+
             }
         }
 
