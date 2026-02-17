@@ -21,5 +21,11 @@ Future<List<dynamic>> scanDevices() async {
   return result;
 }
 
+@override
+Future<List<dynamic>> getBondedDevices() async {
+  final result = await methodChannel.invokeMethod('getBondedDevices');
+  return result;
+}
+
 
 }

@@ -31,4 +31,8 @@ abstract class MyCustomPlugin2Platform extends PlatformInterface {
   throw UnimplementedError('scanDevices() has not been implemented.');
 }
 
+  Future<List<dynamic>> getBondedDevices() {
+    throw UnimplementedError('getBondedDevices() has not been implemented.');
+  }
+
 }
