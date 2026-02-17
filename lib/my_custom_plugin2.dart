@@ -10,7 +10,7 @@ class MyCustomPlugin2 {
     return MyCustomPlugin2Platform.instance.scanDevices();
   }
 
-  Future<List<dynamic>> getBondedDevices() async {
+  Future<List<dynamic>> getBondedDevices() {
   return MyCustomPlugin2Platform.instance.getBondedDevices();
   }
   
