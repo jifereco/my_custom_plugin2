@@ -1,7 +1,7 @@
 package com.example.my_custom_plugin2
 
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
+
 import android.bluetooth.le.*
 import android.os.Handler
 import android.os.Looper
@@ -32,10 +32,10 @@ class BleScanner(private val channel: MethodChannel) {
                 val address = device.address
                 val rssi = resultScan.rssi
 
-                // 🔥 Forma correcta estilo Nordic
-                val bonded = device.bondState == BluetoothDevice.BOND_BONDED
-
-                Log.d("BLE", "Device: $address bondState=${device.bondState}")
+val bonded = when (device.bondState) {
+    android.bluetooth.BluetoothDevice.BOND_BONDED -> true
+    else -> false
+}
 
                 devices[address] = mapOf(
                     "name" to name,
