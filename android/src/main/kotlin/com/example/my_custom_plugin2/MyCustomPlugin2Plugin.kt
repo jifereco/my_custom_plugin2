@@ -15,6 +15,7 @@ import android.content.IntentFilter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import io.flutter.plugin.common.EventChannel
+import android.util.Log
 
 
 class MyCustomPlugin2Plugin :
@@ -51,6 +52,7 @@ val bondChannel = EventChannel(
 bondChannel.setStreamHandler(object : EventChannel.StreamHandler {
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        Log.d("BLE_DEBUG", "EventChannel onListen called")
         bondEventSink = events
         registerBondReceiver()
     }
@@ -130,13 +132,21 @@ private fun registerBondReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
 
+            // 👇 AGREGAR AQUÍ
+            Log.d("BLE_DEBUG", "Broadcast recibido: ${intent?.action}")
+
             if (intent?.action == BluetoothDevice.ACTION_BOND_STATE_CHANGED) {
+
+                // 👇 Y TAMBIÉN AQUÍ (más específico)
+                Log.d("BLE_DEBUG", "Bond state changed broadcast received")
 
                 val device =
                     intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
 
                 val bondState =
                     intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1)
+
+                Log.d("BLE_DEBUG", "Nuevo bondState: $bondState")
 
                 device?.let {
                     bondEventSink?.success(
@@ -151,6 +161,7 @@ private fun registerBondReceiver() {
     }
 
     val filter = IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
+    Log.d("BLE_DEBUG", "Bond receiver registered")
     context.registerReceiver(bondReceiver, filter)
 }
 
