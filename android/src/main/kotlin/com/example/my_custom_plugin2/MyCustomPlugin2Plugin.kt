@@ -124,6 +124,18 @@ connectionManager = ConnectionManager(context)
     result.success(true)
 }
 
+"sendCommand" -> {
+    val command = call.argument<String>("command")
+
+    if (command != null) {
+        val success = connectionManager.sendCommand(command)
+        result.success(success)
+    } else {
+        result.error("NO_COMMAND", "Command null", null)
+    }
+}
+
+
 
             else -> result.notImplemented()
         }

@@ -29,6 +29,11 @@ Future<bool> disconnectDevice() {
   return MyCustomPlugin2Platform.instance.disconnectDevice();
 }
 
+Future<bool> sendCommand(String command) {
+  return MyCustomPlugin2Platform.instance.sendCommand(command);
+}
+
+
   
 
 }

@@ -64,5 +64,15 @@ Stream<Map<dynamic, dynamic>> get bondStream {
     return result ?? false;
   }
 
+@override
+Future<bool> sendCommand(String command) async {
+  final result = await methodChannel.invokeMethod<bool>(
+    'sendCommand',
+    {'command': command},
+  );
+  return result ?? false;
+}
+
+
 
 }

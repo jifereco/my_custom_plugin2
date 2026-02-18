@@ -47,5 +47,10 @@ Future<bool> disconnectDevice() {
   throw UnimplementedError('disconnectDevice() has not been implemented.');
 }
 
+Future<bool> sendCommand(String command) {
+  throw UnimplementedError('sendCommand not implemented');
+}
+
+
 
 }
