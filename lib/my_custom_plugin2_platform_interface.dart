@@ -51,6 +51,10 @@ Future<bool> sendCommand(String command) {
   throw UnimplementedError('sendCommand not implemented');
 }
 
+Stream<String> get notifyStream {
+  throw UnimplementedError('notifyStream not implemented');
+}
+
 
 
 }

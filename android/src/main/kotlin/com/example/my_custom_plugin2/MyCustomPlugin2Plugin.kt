@@ -35,46 +35,56 @@ class MyCustomPlugin2Plugin :
 
 
 
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(binding.binaryMessenger, "my_custom_plugin2")
-        channel.setMethodCallHandler(this)
+override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
 
-       bleScanner = BleScanner(binding.applicationContext, channel)
-       bondManager = BondManager()
-       //context = flutterPluginBinding.applicationContext
-       context = binding.applicationContext
+    channel = MethodChannel(binding.binaryMessenger, "my_custom_plugin2")
+    channel.setMethodCallHandler(this)
 
+    bleScanner = BleScanner(binding.applicationContext, channel)
+    bondManager = BondManager()
+    context = binding.applicationContext
 
+    connectionManager = ConnectionManager(context)
 
-val bondChannel = EventChannel(
-    binding.binaryMessenger,
-    "my_custom_plugin2/bond_stream"
-)
+    // 🔹 Bond Stream
+    val bondChannel = EventChannel(
+        binding.binaryMessenger,
+        "my_custom_plugin2/bond_stream"
+    )
 
-bondChannel.setStreamHandler(object : EventChannel.StreamHandler {
+    bondChannel.setStreamHandler(object : EventChannel.StreamHandler {
 
-    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        Log.d("BLE_DEBUG", "EventChannel onListen called")
-        bondEventSink = events
-        registerBondReceiver()
-    }
-
-    override fun onCancel(arguments: Any?) {
-        bondReceiver?.let {
-            context.unregisterReceiver(it)
-    //try {
-      //  context.unregisterReceiver(it)
-    //} catch (e: IllegalArgumentException) {
-      //  Log.d("BLE_DEBUG", "Receiver already unregistered")
-    //}
+        override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+            Log.d("BLE_DEBUG", "EventChannel onListen called")
+            bondEventSink = events
+            registerBondReceiver()
         }
-        bondEventSink = null
-    }
-})
 
-connectionManager = ConnectionManager(context)
+        override fun onCancel(arguments: Any?) {
+            bondReceiver?.let {
+                context.unregisterReceiver(it)
+            }
+            bondEventSink = null
+        }
+    })
 
+    // 🔹 Notify Stream
+    val notifyChannel = EventChannel(
+        binding.binaryMessenger,
+        "my_custom_plugin2/notify_stream"
+    )
 
+    notifyChannel.setStreamHandler(object : EventChannel.StreamHandler {
+
+        override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+            connectionManager.setNotifyEventSink(events)
+        }
+
+        override fun onCancel(arguments: Any?) {
+            connectionManager.setNotifyEventSink(null)
+        }
+    })
+}
 
 
 

@@ -33,6 +33,9 @@ Future<bool> sendCommand(String command) {
   return MyCustomPlugin2Platform.instance.sendCommand(command);
 }
 
+Stream<String> get notifyStream {
+  return MyCustomPlugin2Platform.instance.notifyStream;
+}
 
   
 

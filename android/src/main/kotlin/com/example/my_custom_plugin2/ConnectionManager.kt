@@ -23,6 +23,8 @@ private val CHARACTERISTIC_TX =
     private var bluetoothGatt: BluetoothGatt? = null
 private var rxCharacteristic: BluetoothGattCharacteristic? = null
 private var txCharacteristic: BluetoothGattCharacteristic? = null
+private var notifyEventSink: EventChannel.EventSink? = null
+
 
 
     fun connect(
@@ -140,7 +142,13 @@ override fun onCharacteristicChanged(
 
             val message = String(characteristic.value)
             Log.d("BLE_GATT", "Received notify: $message")
+            notifyEventSink?.success(message)
         }
     }
+
+fun setNotifyEventSink(sink: EventChannel.EventSink?) {
+    notifyEventSink = sink
+}
+
     }
 }

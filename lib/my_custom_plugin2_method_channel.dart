@@ -16,6 +16,9 @@ class MethodChannelMyCustomPlugin2 extends MyCustomPlugin2Platform {
   final EventChannel _bondChannel =
       const EventChannel('my_custom_plugin2/bond_stream');
 
+final EventChannel _notifyChannel =
+    const EventChannel('my_custom_plugin2/notify_stream');
+
 
 
   @override
@@ -73,6 +76,13 @@ Future<bool> sendCommand(String command) async {
   return result ?? false;
 }
 
+
+@override
+Stream<String> get notifyStream {
+  return _notifyChannel
+      .receiveBroadcastStream()
+      .map((event) => event.toString());
+}
 
 
 }
