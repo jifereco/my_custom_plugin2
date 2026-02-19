@@ -25,6 +25,8 @@ private val CHARACTERISTIC_TX =
 private var rxCharacteristic: BluetoothGattCharacteristic? = null
 private var txCharacteristic: BluetoothGattCharacteristic? = null
 private var notifyEventSink: EventChannel.EventSink? = null
+private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+
 
 
 
@@ -145,9 +147,13 @@ override fun onCharacteristicChanged(
             Log.d("BLE_GATT", "Received notify: $message")
             
         // 🔥 Ejecutar en Main Thread
-        android.os.Handler(android.os.Looper.getMainLooper()).post {
-            notifyEventSink?.success(message)
-			}
+        //android.os.Handler(android.os.Looper.getMainLooper()).post {
+          //  notifyEventSink?.success(message)
+			//}
+			mainHandler.post {
+    notifyEventSink?.success(message)
+}
+
         }
     }
 
