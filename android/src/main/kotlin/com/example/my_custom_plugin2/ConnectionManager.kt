@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import io.flutter.plugin.common.MethodChannel
 import java.util.UUID
+import io.flutter.plugin.common.EventChannel
 
 class ConnectionManager(
     private val context: Context
@@ -146,9 +147,8 @@ override fun onCharacteristicChanged(
         }
     }
 
-fun setNotifyEventSink(sink: EventChannel.EventSink?) {
+   }
+   fun setNotifyEventSink(sink: EventChannel.EventSink?) {
     notifyEventSink = sink
-}
-
-    }
+  }
 }
