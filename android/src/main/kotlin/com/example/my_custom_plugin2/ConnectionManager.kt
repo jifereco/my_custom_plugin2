@@ -143,6 +143,9 @@ override fun onCharacteristicChanged(
 
             val message = String(characteristic.value)
             Log.d("BLE_GATT", "Received notify: $message")
+            
+        // 🔥 Ejecutar en Main Thread
+        android.os.Handler(android.os.Looper.getMainLooper()).post {
             notifyEventSink?.success(message)
         }
     }
