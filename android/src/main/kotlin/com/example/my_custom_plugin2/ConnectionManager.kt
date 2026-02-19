@@ -147,6 +147,7 @@ override fun onCharacteristicChanged(
         // 🔥 Ejecutar en Main Thread
         android.os.Handler(android.os.Looper.getMainLooper()).post {
             notifyEventSink?.success(message)
+			}
         }
     }
 
